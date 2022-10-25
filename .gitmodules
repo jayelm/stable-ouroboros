@@ -1,0 +1,6 @@
+[submodule "clip-interrogator"]
+	path = clip-interrogator
+	url = git@github.com:pharmapsychotic/clip-interrogator.git
+[submodule "blip"]
+	path = blip
+	url = git@github.com:pharmapsychotic/blip.git

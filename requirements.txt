@@ -1,0 +1,9 @@
+ftfy
+regex
+tqdm
+transformers==4.17.0
+timm
+fairscale
+requests
+git+https://github.com/openai/CLIP.git@main#egg=clip
+git+https://github.com/pharmapsychotic/BLIP.git@main#egg=blip
