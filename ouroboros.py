@@ -24,15 +24,67 @@ HTML_SKELETON = """
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/css/splide.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet"><Paste>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+    li#splide01-slide01 {{
+        padding-left: 10px;
+    }}
+    .instructions {{
+    }}
+    .left-arrow, .right-arrow {{
+        color: #ccc;
+        text-align: center;
+        line-height: 0px;
+    }}
+    i {{
+        font-size: 24px;
+    }}
+    i.fa-comment-dots, i.fa-image {{
+        font-size: 18px;
+    }}
     p {{
 	font-family: 'Roboto Mono', monospace;
         font-size: 18px;
     }}
-    .splide__slide img {{
+    .iteration-image {{
+        padding: 0px;
+    }}
+    .iteration-caption {{
+        width: 300px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }}
+    .iteration-caption-table {{
         width: 100%;
+        height: 512px;
+    }}
+    .iteration-caption p.caption {{
+        text-align: center;
+        padding-left: 5px;
+        padding-right: 5px;
+    }}
+    .iteration-caption p.number {{
+        text-align: center;
+        font-family: "Open Sans", sans-serif;
+        color: #ccc;
+        font-size: 24px;
+    }}
+    .splide__slide img {{
+        width: 512px;
         height: auto;
+    }}
+    tr.caption-row {{
+        height: 512px;
+    }}
+    tr.number-row {{
+        transform: translateY(-30px);
+    }}
+    .instructions p {{
+        text-align: center;
+        font-family: "Open Sans", sans-serif;
+        color: #ccc;
+        font-size: 24px;
     }}
     </style>
   </head>
@@ -44,6 +96,9 @@ HTML_SKELETON = """
 		</ul>
   </div>
 </section>
+<section class="instructions">
+  <p>Click and drag</p>
+  </section>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/js/splide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide-extension-auto-scroll@0.5.3/dist/js/splide-extension-auto-scroll.min.js"></script>
     <script>
@@ -53,6 +108,13 @@ HTML_SKELETON = """
     perPage: 3,
     drag   : 'free',
     focus  : 'center',
+    lazyLoad: 'nearby',
+    height: '600px',
+    autoWidth: true,
+    wheel: true,
+    wheelSleep: 50,
+    arrows: false,
+    gap: 10,
     }});
     splide.mount( window.splide.Extensions );
   }} );
@@ -61,14 +123,39 @@ HTML_SKELETON = """
 </html>
 """
 
-SPLIDE_SKELETON = "<li class=\"splide__slide\">{html}</li>"
-
 
 HTML_TEMPLATE = """
-<dir class="iteration">
-    <img class="image" src="{image}"></img>
-    <p class="caption">{iteration}. {prompt}</p>
-</dir>
+<li class="splide__slide">
+    <dir class="iteration-image">
+        <img class="image" src="{image}"></img>
+    </dir>
+</li>
+<li class="splide__slide">
+    <dir class="iteration-caption">
+        <table class="iteration-caption-table">
+            <tr class="caption-row">
+                    <td class="left-arrow">
+                        <i class="fa-solid fa-comment-dots"></i>
+                        <i class="fa-solid fa-arrow-right">
+                    </td>
+                    <td>
+                        <p class="caption">"{prompt}"</p>
+                    </td>
+                    <td class="right-arrow">
+                        <i class="fa-solid fa-image"></i>
+                        <i class="fa-solid fa-arrow-right">
+                    </td>
+            </tr>
+            <tr class="number-row">
+            <td></td>
+                    <td>
+                        <p class="number">{iteration}</p>
+                    </td>
+            <td></td>
+            </tr>
+        </table>
+    </dir>
+</li>
 """
 
 
@@ -93,10 +180,7 @@ def save_html_file(prompts, directory):
         html_snippet = HTML_TEMPLATE.format(
             image=f"{i}.png",
             prompt=prompt,
-            iteration=i,
-        )
-        html_snippet = SPLIDE_SKELETON.format(
-            html=html_snippet
+            iteration=i + 1,
         )
         htmls.append(html_snippet)
     html = HTML_SKELETON.format(
@@ -128,7 +212,7 @@ def main(args):
     else:
         assert args.image is not None
         image = Image.open(args.image)
-        dirname = f"image_{os.path.basename(image)}"
+        dirname = f"image_{os.path.basename(args.image)}"
 
     prompts = []
     images = []
