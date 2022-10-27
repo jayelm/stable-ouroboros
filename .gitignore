@@ -129,5 +129,8 @@ dmypy.json
 .pyre/
 
 # gitignore examples
-image_/
-prompt_/
+image_*/
+prompt_*/
+
+# interrogator cache
+cache/
