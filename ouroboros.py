@@ -183,10 +183,7 @@ def save_html_file(prompts, directory):
             iteration=i + 1,
         )
         htmls.append(html_snippet)
-    html = HTML_SKELETON.format(
-        directory=directory,
-        splide_htmls="\n".join(htmls)
-    )
+    html = HTML_SKELETON.format(directory=directory, splide_htmls="\n".join(htmls))
 
     with open(os.path.join(directory, "index.html"), "w") as f:
         f.write(html + "\n")
